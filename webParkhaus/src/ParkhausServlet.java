@@ -56,8 +56,8 @@ public class ParkhausServlet extends HttpServlet {
 		
 		//AverageButton
 		if("cmd".equals(command)&&"avg".equals(param)) {
-			out.println("Average Price: " + df.format(system.getStats().getAvgPrice()) + " Euro" + " " + "Duration: " + df.format(system.getStats().getAvgDauer() + " Minuten"));
-			System.out.println("avgPrice = " + system.getStats().getAvgPrice() + " Euro" + " " + "Duration:" + system.getStats().getAvgDauer() + " Minuten");
+			out.println("Durchschnittlicher Ticketpreis: " + df.format(system.getStats().getAvgPrice()) + " Euro;" + " " + "Durchschnittliche Parkdauer: " + df.format(system.getStats().getAvgDauer()) + " Minuten");
+			System.out.println("avgPrice = " + df.format(system.getStats().getAvgPrice()) + " Euro;" + " " + "dur: " + df.format(system.getStats().getAvgDauer()) + " Minuten");
 		}
 			
 		//AlarmButton
