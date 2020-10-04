@@ -37,7 +37,7 @@ public class Graphs {
 		JsonArray xWerte = Json.createArrayBuilder(parkdauer).build();
 		JsonArray yWerte = Json.createArrayBuilder(parkdauer).build();	
 
-		output = barChart(xWerte, yWerte);
+		output = pieChart(xWerte, yWerte);
 
 		System.out.println(output);
 		return output;
@@ -75,6 +75,18 @@ public class Graphs {
 		return root.toString();
 	}	
 	
+	private static String pieChart(JsonArray xWerte, JsonArray yWerte) {
+		JsonObject root = Json.createObjectBuilder()
+				.add("data", Json.createArrayBuilder()
+						.add(Json.createObjectBuilder()
+							.add("values",yWerte)
+							.add("labels", xWerte)
+							.add("type", "pie")
+						)	
+					)	
+				.build();
+		return root.toString();
+	}
 	
 	//Function to get ArrayList from Stream 
     public static <T> ArrayList<T> getArrayListFromStream(Stream<T> stream) { 
