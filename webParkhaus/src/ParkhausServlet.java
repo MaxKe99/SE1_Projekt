@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -41,6 +42,9 @@ public class ParkhausServlet extends HttpServlet {
 		response.setContentType("text/html"); 
 		PrintWriter out = response.getWriter(); 
 		
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+		
 		ParkhausState state = getState();
 		ParkhausSystem system = getSystem();
 		
@@ -52,7 +56,7 @@ public class ParkhausServlet extends HttpServlet {
 		
 		//AverageButton
 		if("cmd".equals(command)&&"avg".equals(param)) {
-			out.println("Average Price: " + system.getStats().getAvgPrice() + " Euro" + " " + "Duration: " + system.getStats().getAvgDauer() + " Minuten");
+			out.println("Average Price: " + df.format(system.getStats().getAvgPrice()) + " Euro" + " " + "Duration: " + df.format(system.getStats().getAvgDauer() + " Minuten"));
 			System.out.println("avgPrice = " + system.getStats().getAvgPrice() + " Euro" + " " + "Duration:" + system.getStats().getAvgDauer() + " Minuten");
 		}
 			
