@@ -11,70 +11,51 @@ import javax.json.JsonObject;
 
 public class Graphs {
 	
-	public static String create(ArrayList<? extends Object> list, String chart, ChartSetting setting) {
+	public static String create(ArrayList<? extends Object> list, String chart) {
 		String output = "";
 		
 		chart = chart.toLowerCase();
-		String ChartArt = setting.getArt();
-		Integer nummer = setting.getNummer();
 		if(chart.equals("spots")) {
 			ArrayList<Integer> spots = (ArrayList<Integer>) list;
-			output = spots(spots.stream().filter(p -> p >= nummer), ChartArt);
+			output = spots(spots.stream());
 			
 		}else if(chart.equals("parkdauer")) {
 			ArrayList<Car> cars = (ArrayList<Car>) list;
-			output = parkdauer(cars.stream().filter(p -> Float.parseFloat(p.getParkdauer()) >= nummer), ChartArt);
+			output = parkdauer(cars.stream());
 		}
 		return output;
 	}
 	
 	
-	private static String parkdauer(Stream<Car> s, String ChartArt) {
+	private static String parkdauer(Stream<Car> s) {
 		String output = "";
 		ArrayList<Car> cars = (ArrayList<Car>) getArrayListFromStream(s);
-		ArrayList<String> nr = new ArrayList<String>();
 		ArrayList<String> parkdauer = new ArrayList<String>();
 		
-		cars.stream().forEach((z)->nr.add("Car_" + z.getNr()));
 		cars.stream().forEach((z)->parkdauer.add(z.getParkdauer()));
 		
-		JsonArray xWerte = Json.createArrayBuilder(nr).build();
+		JsonArray xWerte = Json.createArrayBuilder(parkdauer).build();
 		JsonArray yWerte = Json.createArrayBuilder(parkdauer).build();	
-		switch(ChartArt) {
-			case "bar":
-				output = barChart(xWerte, yWerte);
-				break;
-			case "pie":
-				output = pieChart(xWerte, yWerte);
-				break;
-		}		
+
+		output = barChart(xWerte, yWerte);
+
 		System.out.println(output);
 		return output;
 		
 	}	
 	
-	private static String spots(Stream<Integer> stream, String ChartArt) {
+	private static String spots(Stream<Integer> stream) {
 		String output = "";
 		ArrayList<Integer> spots = getArrayListFromStream(stream);
-		ArrayList<String> nr = new ArrayList<String>();
 		ArrayList<String> anzahl = new ArrayList<String>();
 		
-		for(int i = 0; i < spots.size(); i++) {
-			nr.add("Parkplatz" + Integer.toString(i+1));
-		}
 		spots.stream().forEach((z)->anzahl.add(Integer.toString(z)));
 		
-		JsonArray xWerte = Json.createArrayBuilder(nr).build();
+		JsonArray xWerte = Json.createArrayBuilder(anzahl).build();
 		JsonArray yWerte = Json.createArrayBuilder(anzahl).build();	
-	
-		switch(ChartArt) {
-			case "bar":
-				output = barChart(xWerte, yWerte);
-				break;
-			case "pie":
-				output = pieChart(xWerte, yWerte);
-				break;
-		}		
+		
+		output = barChart(xWerte, yWerte);
+		
 		System.out.println(output);
 		return output;
 		
@@ -92,20 +73,7 @@ public class Graphs {
 					)	
 				.build();
 		return root.toString();
-	}
-	
-	private static String pieChart(JsonArray xWerte, JsonArray yWerte) {
-		JsonObject root = Json.createObjectBuilder()
-				.add("data", Json.createArrayBuilder()
-						.add(Json.createObjectBuilder()
-							.add("values",yWerte)
-							.add("labels", xWerte)
-							.add("type", "pie")
-						)	
-					)	
-				.build();
-		return root.toString();
-	}
+	}	
 	
 	
 	//Function to get ArrayList from Stream 

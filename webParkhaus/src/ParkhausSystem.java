@@ -8,7 +8,7 @@ public class ParkhausSystem implements IObserver {
 	private Integer maxPark;
 	private IParkBehavior parkBehav;
 	private Statistics stats;
-	private HashMap<String, ChartSetting> settings;
+
 	
 	public ParkhausSystem(IParkBehavior parkBehav) {
 		this.free = new ArrayList<Integer>();
@@ -16,9 +16,6 @@ public class ParkhausSystem implements IObserver {
 		while(free.size() < maxPark) free.add(0);
 		this.parkBehav = parkBehav;
 		this.stats = new Statistics(this);
-		this.settings = new HashMap<String, ChartSetting>();
-		this.settings.put("Spots", new ChartSetting("bar", 0));
-		this.settings.put("Parkdauer", new ChartSetting("bar", 0));
 	}
 	
 	@Override
@@ -63,41 +60,6 @@ public class ParkhausSystem implements IObserver {
 		}	
 	}
 	
-	public void changeChartSetting(String[] changeChart) {
-		ChartSetting setting = null;
-		String key = "";
-		
-		switch(changeChart[0]) {
-			//Spots Chart
-			case "SelectChart=1":
-				setting = getSetting().get("Spots");
-				key = "Spots";
-				break;
-			//Parkdauer Chart
-			case "SelectChart=2":	
-				setting = getSetting().get("Parkdauer");
-				key = "Parkdauer";
-				break;
-		}		
-		
-		switch(changeChart[1]) {
-			//Bar Chart
-			case "SelectArt=1":
-				setting.setArt("bar");
-				break;
-			//Pie Chart
-			case "SelectArt=2":
-				setting.setArt("pie");
-		}
-		
-		//Setze Nummer, falls ausgewählt
-		if(!changeChart[2].equals("number=")) {
-			String[] nummer = changeChart[2].split("=");
-				setting.setNummer(Integer.parseInt(nummer[1]));
-		}
-		settings.put(key, setting);
-	}
-	
 		
 	//Getter und Setter
 	public ArrayList<Integer> getFree() {
@@ -140,11 +102,4 @@ public class ParkhausSystem implements IObserver {
 		this.stats = stats;
 	}
 
-	public HashMap<String, ChartSetting> getSetting() {
-		return settings;
-	}
-	
-	public void setSettings(HashMap<String, ChartSetting> settings) {
-		this.settings = settings;
-	}
 }

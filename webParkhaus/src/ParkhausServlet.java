@@ -83,14 +83,14 @@ public class ParkhausServlet extends HttpServlet {
 		if("cmd".equals(command)&&"Spots".equals(param)) {
 			ArrayList<Integer> spots = system.getStats().getSpots();
 			//out.println(Arrays.toString(spots.toArray()));
-			out.println(Graphs.create(spots, "Spots", system.getSetting().get("Spots")));
+			out.println(Graphs.create(spots, "Spots"));
 		}
 				
 		//Parkdauer Chart
 		if("cmd".equals(command)&&"Parkdauer".equals(param)) {
 			ArrayList<Car> cars = system.getStats().getCars();
 			//Alle Autos die Länger als 10 Minuten im Parkhaus waren
-			out.println(Graphs.create(cars, "Parkdauer", system.getSetting().get("Parkdauer")));
+			out.println(Graphs.create(cars, "Parkdauer"));
 		}
 		getApplication().setAttribute("state", state);
 		getApplication().setAttribute("system", system);
@@ -104,7 +104,6 @@ public class ParkhausServlet extends HttpServlet {
 		//Eigenen Post Request einlesen, für Änderung der Chart Funktionen
 		if(body.contains("SelectChart")) {
 			String[] changeChart = body.split("&");
-			system.changeChartSetting(changeChart);
 		}
 		
 		//String der Parkhaus Api einlesen

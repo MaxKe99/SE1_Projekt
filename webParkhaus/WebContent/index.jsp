@@ -14,10 +14,6 @@
 	extra_charts='["Spots","Parkdauer"]'
 ></ccm-parkhaus-9-1-7>
 
-<form method="post" target="_blank">
-  	<button type="submit" formaction="einstellungen.jsp">Einstellungen</button>
-</form>
-
 
 </body>
 </html>
