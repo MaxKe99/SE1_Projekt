@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/Parkhaus")
 public class ParkhausServlet extends HttpServlet {
        
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public void init() {
 		//Initialisiere Alarmsystem
 		ParkhausState state = getState();
@@ -41,7 +44,7 @@ public class ParkhausServlet extends HttpServlet {
 		
 		response.setContentType("text/html"); 
 		PrintWriter out = response.getWriter(); 
-		
+//		Erlaubt zwei Nachkommastellen bei Zahlen
 		DecimalFormat df = new DecimalFormat();
 		df.setMaximumFractionDigits(2);
 		
@@ -50,8 +53,8 @@ public class ParkhausServlet extends HttpServlet {
 		
 		//SummenButton
 		if("cmd".equals(command)&&"sum".equals(param)) {		
-			out.println(system.getStats().getSum() + " Euro");
-			System.out.println("sum = " + system.getStats().getSum() + " Euro");
+			out.println(df.format(system.getStats().getSum()) + " Euro");
+			System.out.println("sum = " + df.format(system.getStats().getSum()) + " Euro");
 		}
 		
 		//AverageButton
@@ -84,10 +87,10 @@ public class ParkhausServlet extends HttpServlet {
 		}
 		
 		//SpotsChart
-		if("cmd".equals(command)&&"Spots".equals(param)) {
+		if("cmd".equals(command)&&"Auslastung".equals(param)) {
 			ArrayList<Integer> spots = system.getStats().getSpots();
 			//out.println(Arrays.toString(spots.toArray()));
-			out.println(Graphs.create(spots, "Spots"));
+			out.println(Graphs.create(spots, "Auslastung"));
 		}
 				
 		//Parkdauer Chart

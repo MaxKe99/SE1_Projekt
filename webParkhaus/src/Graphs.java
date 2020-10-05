@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-
+import java.lang.Math;
 
 
 public class Graphs {
@@ -15,7 +16,7 @@ public class Graphs {
 		String output = "";
 		
 		chart = chart.toLowerCase();
-		if(chart.equals("spots")) {
+		if(chart.equals("auslastung")) {
 			ArrayList<Integer> spots = (ArrayList<Integer>) list;
 			output = spots(spots.stream());
 			
@@ -27,18 +28,39 @@ public class Graphs {
 	}
 	
 	
-	private static String parkdauer(Stream<Car> s) {
+	private static String parkdauer(Stream<Car> stream) {
 		String output = "";
-		ArrayList<Car> cars = (ArrayList<Car>) getArrayListFromStream(s);
-		ArrayList<String> parkdauer = new ArrayList<String>();
 		
-		cars.stream().forEach((z)->parkdauer.add(z.getParkdauer()));
+//		Ablage des CarStreams
+		ArrayList<Car> streamContainer = new ArrayList<Car>(stream.collect(Collectors.toList()));
+//		Rundet Parkdauer zur nächsten Minute auf/ab
+		List<String> dauerList = streamContainer.stream()
+				.map(x -> Integer.toString(Math.round(Float.parseFloat(x.getParkdauer()))) + " Sekunden").collect(Collectors.toList());
+//		Zählt Aufkommen der einzelnen Parkzeiten
+		Map<String, Long> counter = dauerList.stream()
+				.collect(Collectors.groupingBy(x -> x, Collectors.counting()));
+//		Extrahiert die einzelnen Längen
+		ArrayList<String> descriptors = new ArrayList<String>();
+		descriptors.addAll(counter.keySet());
+//		Extrahiert Aufkommen
+		ArrayList<Long> counts = new ArrayList<Long>();
+		for(int i = 0; i < descriptors.size(); i++) {
+			counts.add(counter.get(descriptors.get(i)));
+		}
 		
-		JsonArray xWerte = Json.createArrayBuilder(parkdauer).build();
-		JsonArray yWerte = Json.createArrayBuilder(parkdauer).build();	
+		JsonArray xWerte = Json.createArrayBuilder(descriptors).build();
+		JsonArray yWerte = Json.createArrayBuilder(counts).build();	
 
-		output = pieChart(xWerte, yWerte);
-
+		JsonObject root = Json.createObjectBuilder()
+				.add("data", Json.createArrayBuilder()
+						.add(Json.createObjectBuilder()
+							.add("values",yWerte)
+							.add("labels", xWerte)
+							.add("type", "pie")
+						)	
+					)	
+				.build();
+		output = root.toString();
 		System.out.println(output);
 		return output;
 		
@@ -46,22 +68,20 @@ public class Graphs {
 	
 	private static String spots(Stream<Integer> stream) {
 		String output = "";
-		ArrayList<Integer> spots = getArrayListFromStream(stream);
-		ArrayList<String> anzahl = new ArrayList<String>();
 		
-		spots.stream().forEach((z)->anzahl.add(Integer.toString(z)));
+//		Ablage des Integerstreams
+		ArrayList<Integer> streamContainer = new ArrayList<Integer>(stream.collect(Collectors.toList()));
+//		Belegungsarray zu ArrayList
+		ArrayList<String> belegung = new ArrayList<String>(streamContainer.stream().map(x -> Integer.toString(x)).collect(Collectors.toList()));
+//		Parkplatznummer als Graphbeschreibung
+		ArrayList<String> descriptors = new ArrayList<String>();
+		for(int i = 0; i < streamContainer.size(); i++) {
+			descriptors.add("Parkplatz Nr. " + (i+1));
+		}
 		
-		JsonArray xWerte = Json.createArrayBuilder(anzahl).build();
-		JsonArray yWerte = Json.createArrayBuilder(anzahl).build();	
+		JsonArray xWerte = Json.createArrayBuilder(descriptors).build();
+		JsonArray yWerte = Json.createArrayBuilder(belegung).build();
 		
-		output = barChart(xWerte, yWerte);
-		
-		System.out.println(output);
-		return output;
-		
-	}
-	
-	private static String barChart(JsonArray xWerte, JsonArray yWerte) {
 		JsonObject root = Json.createObjectBuilder()
 				.add("data", Json.createArrayBuilder()
 						.add(Json.createObjectBuilder()
@@ -72,33 +92,11 @@ public class Graphs {
 						)	
 					)	
 				.build();
-		return root.toString();
-	}	
-	
-	private static String pieChart(JsonArray xWerte, JsonArray yWerte) {
-		JsonObject root = Json.createObjectBuilder()
-				.add("data", Json.createArrayBuilder()
-						.add(Json.createObjectBuilder()
-							.add("values",yWerte)
-							.add("labels", xWerte)
-							.add("type", "pie")
-						)	
-					)	
-				.build();
-		return root.toString();
+		output = root.toString();
+		System.out.println(output);
+		return output;
+		
 	}
-	
-	//Function to get ArrayList from Stream 
-    public static <T> ArrayList<T> getArrayListFromStream(Stream<T> stream) { 
-        //Convert the Stream to List 
-        List<T> list = stream.collect(Collectors.toList()); 
- 
-        //Create an ArrayList of the List 
-        ArrayList<T> arrayList = new ArrayList<T>(list); 
-  
-        //Return the ArrayList 
-        return arrayList; 
-    } 
-  
+
 	
 }
