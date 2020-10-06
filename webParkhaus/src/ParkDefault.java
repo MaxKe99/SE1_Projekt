@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ParkDefault implements IParkBehavior {
 
@@ -7,7 +6,7 @@ public class ParkDefault implements IParkBehavior {
 	
 	@Override
 	public int einparkSystem(ParkhausSystem system, String[] params) {
-		//Erstelle neues Car
+		//Rufe Instanz des angefragten Fahrzeugtyps ab
 		Car newCar = Car.getInstance(params[9]);
 		newCar.initAttributes(params);
 		System.out.println("Auto wurde hinzugefügt: "+params[9]+ " " + newCar);	

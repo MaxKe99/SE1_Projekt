@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ParkBackward implements IParkBehavior {
 
@@ -7,10 +6,9 @@ public class ParkBackward implements IParkBehavior {
 	
 	@Override
 	public int einparkSystem(ParkhausSystem system, String[] params) {
-		//Erstelle neues Car
+		//Rufe Instanz des angefragten Fahrzeugtyps ab
 		Car newCar = Car.getInstance(params[9]);
 		newCar.initAttributes(params);
-		//Füge Car in die Statistik hinzu
 		System.out.println("Auto wurde hinzugefügt: "+params[9]+ " " + newCar);	
 		
 		//Einparkvorgang 		
@@ -18,7 +16,7 @@ public class ParkBackward implements IParkBehavior {
 			System.out.println("Alarm ist aktiviert. Einparkfunktion gesperrt.");
 			return -1;
 		}else {
-			//Automatische Einparkfunktion
+			//Einparkfunktion
 			ArrayList<Car> spots = system.getSpots();
 			
 			int j = spots.lastIndexOf(null);

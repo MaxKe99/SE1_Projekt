@@ -29,12 +29,12 @@ public class ParkhausSystem implements IObserver {
 	
 	public void ausparkSystem(String[] params) {
 		Integer freeParkIndex = Integer.parseInt(params[7])-1;
-
+//		Nimmt betreffendes Fahrzeug aus der ArrayList
 		ArrayList<Car> spots = getSpots();
 		Car cTemp = spots.get(freeParkIndex);
 		cTemp.setAttributes(params);
 		
-		//Berechne sumPrice, avgPrice und anzahlBesucher. Uebergebe priceString und minutenString
+//		Berechne sumPrice, avgPrice und anzahlBesucher
 		getStats().calculate(cTemp.getPreis(), cTemp.getParkdauer());
 
 //		speichert Dauer des Parkvorgangs		
@@ -43,6 +43,7 @@ public class ParkhausSystem implements IObserver {
 		//Zaehlt besuchten Parkplatz
 		getStats().countSpots(params[7]);
 		
+//		Setzt Instanz zurück und setzt Position in der Arraylist auf null
 		cTemp.clearAttributes();
 		spots.set(freeParkIndex, null);
 		setSpots(spots);	
