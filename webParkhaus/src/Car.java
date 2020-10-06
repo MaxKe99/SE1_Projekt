@@ -1,27 +1,45 @@
-
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class Car {
 	
 	private String nr;
-	private String ticket;
 	private String farbe;
-	private String spot;
 	private String parkdauer;
 	private String preis;
+    private final String key;
+    
+    private static final ConcurrentMap<String, Car> multitons = new ConcurrentHashMap<>();
 
-	
-	
-	public Car(String[] params) {
-		this.nr = params[1];
-		this.ticket = "None";
-		this.farbe = params[8];
-		this.parkdauer = "0";
-		this.preis = "None";
-		this.spot = "None";	
-	}
+
+    private Car(String key) {
+    	this.key = key;	
+    }
+
+    public static Car getInstance(final String key) {
+        return multitons.computeIfAbsent(key, Car::new);
+    }
 	
 	
 	//Getter und Setter
+    
+    public void initAttributes(String[] params) {
+		this.nr = params[1];
+		this.farbe = params[6];
+    }
+    
+    public void setAttributes(String[] params) {
+		this.parkdauer = params[3];
+		this.preis = params[4];
+    }
+    
+    public void clearAttributes() {
+		this.nr = "None";
+		this.farbe = "None";
+		this.parkdauer = "0";
+		this.preis = "None";
+    }
+    
 	public String getFarbe() {
 		return farbe;
 	}
@@ -49,26 +67,6 @@ public class Car {
 
 	public void setNr(String nr) {
 		this.nr = nr;
-	}
-
-
-	public String getTicket() {
-		return ticket;
-	}
-
-
-	public void setTicket(String ticket) {
-		this.ticket = ticket;
-	}
-
-
-	public String getSpot() {
-		return spot;
-	}
-
-
-	public void setSpot(String spot) {
-		this.spot = spot;
 	}
 
 	public String getPreis() {

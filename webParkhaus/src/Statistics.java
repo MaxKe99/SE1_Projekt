@@ -7,8 +7,8 @@ public class Statistics {
 	private float avgDauer;
 	private float gesamtDauer;
 	private float sum;
-	private ArrayList<Car> cars;
 	private ArrayList<Integer> spots;
+	private ArrayList<String> parktime;
 	
 	public Statistics(ParkhausSystem system) {
 		this.anzahlBesucher = 0;
@@ -16,8 +16,8 @@ public class Statistics {
 		this.avgDauer = 0.0f;
 		this.gesamtDauer = 0.0f;
 		this.sum = 0.0f;
-		this.cars = new ArrayList<Car>();
 		this.spots = new ArrayList<Integer>();
+		this.parktime = new ArrayList<String>();
 		while(spots.size() < system.getMaxPark()) spots.add(0);
 	}
 		
@@ -35,25 +35,8 @@ public class Statistics {
 		setAvgPrice(getSum()/getAnzahlBesucher());
 	}
 	
-	public void addCar(Car car) {
-		cars.add(car);
-	}
-	
-	public Car removeCar(Car car) {
-		cars.remove(car);
-		return car;
-	}
-	
-	public void carData(String[] params) {
-		//Setze Parkdauer und Preis, wenn Auto Parkhaus verlässt
-		for(int i = 0; i < getCars().size(); ++i) {
-			if(getCars().get(i).getNr().equals(params[1])) {
-				getCars().get(i).setParkdauer(Float.toString((Float.parseFloat(params[3])/1000)));
-				getCars().get(i).setPreis(params[4]);
-				getCars().get(i).setTicket(params[5]);;
-				getCars().get(i).setSpot(params[7]);
-			}
-		}	
+	public void timeData(String time) {
+		parktime.add(time);
 	}
 	
 	public void countSpots(String parkString) {
@@ -65,6 +48,10 @@ public class Statistics {
 	
 
 	//Getter und Setter
+
+	public ArrayList<String> getParktime() {
+		return parktime;
+	}
 
 	public int getAnzahlBesucher() {
 		return anzahlBesucher;
@@ -106,14 +93,6 @@ public class Statistics {
 		this.avgPrice = avgPrice;
 	}
 
-	public ArrayList<Car> getCars() {
-		return cars;
-	}
-
-	public void setCars(ArrayList<Car> cars) {
-		this.cars = cars;
-	}
-	
 	public ArrayList<Integer> getSpots() {
 		return spots;
 	}

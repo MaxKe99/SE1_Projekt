@@ -4,16 +4,16 @@ import java.util.HashMap;
 public class ParkhausSystem implements IObserver {
 
 	private boolean alarm;
-	private ArrayList<Integer> free;
+	private ArrayList<Car> spots;
 	private Integer maxPark;
 	private IParkBehavior parkBehav;
 	private Statistics stats;
 
 	
 	public ParkhausSystem(IParkBehavior parkBehav) {
-		this.free = new ArrayList<Integer>();
+		this.spots = new ArrayList<Car>();
 		this.maxPark = 10;
-		while(free.size() < maxPark) free.add(0);
+		while(spots.size() < maxPark) spots.add(null);
 		this.parkBehav = parkBehav;
 		this.stats = new Statistics(this);
 	}
@@ -29,18 +29,23 @@ public class ParkhausSystem implements IObserver {
 	
 	public void ausparkSystem(String[] params) {
 		Integer freeParkIndex = Integer.parseInt(params[7])-1;
-		//Setze Parkplatz an Stelle freeParkIndex auf frei. 
-		getFree().set(freeParkIndex, 0);
+
+		ArrayList<Car> spots = getSpots();
+		Car cTemp = spots.get(freeParkIndex);
+		cTemp.setAttributes(params);
 		
 		//Berechne sumPrice, avgPrice und anzahlBesucher. Uebergebe priceString und minutenString
-		getStats().calculate(params[4], params[3]);
-		//Car Daten vervollständigen
-		//Setze Parkdauer und Preis, wenn Auto Parkhaus verlässt
-		getStats().carData(params);	
+		getStats().calculate(cTemp.getPreis(), cTemp.getParkdauer());
+
+//		speichert Dauer des Parkvorgangs		
+		getStats().timeData(cTemp.getParkdauer());
 		
-		//Zaehle besuchten Parkplatz
+		//Zaehlt besuchten Parkplatz
 		getStats().countSpots(params[7]);
 		
+		cTemp.clearAttributes();
+		spots.set(freeParkIndex, null);
+		setSpots(spots);	
 	}
 	
 	
@@ -51,23 +56,23 @@ public class ParkhausSystem implements IObserver {
 			Integer maxAlt = getMaxPark();
 			setMaxPark(maxNeu);
 			if(maxAlt < maxNeu) {
-				getFree().add(0);
+				getSpots().add(null);
 				getStats().getSpots().add(0);
 			}else {
-				getFree().remove(getFree().size()-1);
+				getSpots().remove(getSpots().size()-1);
 				getStats().getSpots().remove(getStats().getSpots().size()-1);
 			}		
 		}	
 	}
 	
 		
-	//Getter und Setter
-	public ArrayList<Integer> getFree() {
-		return free;
+	//Getter und Setter	
+	public ArrayList<Car> getSpots() {
+		return spots;
 	}
-
-	public void setFree(ArrayList<Integer> free) {
-		this.free = free;
+	
+	public void setSpots(ArrayList<Car> spots) {
+		this.spots = spots;
 	}
 
 	public Integer getMaxPark() {

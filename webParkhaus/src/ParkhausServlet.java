@@ -60,7 +60,7 @@ public class ParkhausServlet extends HttpServlet {
 		//AverageButton
 		if("cmd".equals(command)&&"avg".equals(param)) {
 			out.println("Durchschnittlicher Ticketpreis: " + df.format(system.getStats().getAvgPrice()) + " Euro;" + " " + "Durchschnittliche Parkdauer: " + df.format(system.getStats().getAvgDauer()) + " Minuten");
-			System.out.println("avgPrice = " + df.format(system.getStats().getAvgPrice()) + " Euro;" + " " + "dur: " + df.format(system.getStats().getAvgDauer()) + " Minuten");
+			System.out.println("avgPrice = " + df.format(system.getStats().getAvgPrice()) + " Euro;" + " " + "AvgDur: " + df.format(system.getStats().getAvgDauer()) + " Minuten");
 		}
 			
 		//AlarmButton
@@ -86,19 +86,18 @@ public class ParkhausServlet extends HttpServlet {
 			System.out.println("Parkverhalten wurde geändert");
 		}
 		
-		//SpotsChart
+		//Auslastungschart
 		if("cmd".equals(command)&&"Auslastung".equals(param)) {
 			ArrayList<Integer> spots = system.getStats().getSpots();
-			//out.println(Arrays.toString(spots.toArray()));
 			out.println(Graphs.create(spots, "Auslastung"));
 		}
 				
-		//Parkdauer Chart
+		//Parkdauerchart
 		if("cmd".equals(command)&&"Parkdauer".equals(param)) {
-			ArrayList<Car> cars = system.getStats().getCars();
-			//Alle Autos die Länger als 10 Minuten im Parkhaus waren
-			out.println(Graphs.create(cars, "Parkdauer"));
+			ArrayList<String> parktime = system.getStats().getParktime();
+			out.println(Graphs.create(parktime, "Parkdauer"));
 		}
+		
 		getApplication().setAttribute("state", state);
 		getApplication().setAttribute("system", system);
 	}
@@ -107,11 +106,6 @@ public class ParkhausServlet extends HttpServlet {
 		ParkhausSystem system = getSystem();
 		String body = getBody(request);
 		System.out.println(body);
-		
-		//Eigenen Post Request einlesen, für Änderung der Chart Funktionen
-		if(body.contains("SelectChart")) {
-			String[] changeChart = body.split("&");
-		}
 		
 		//String der Parkhaus Api einlesen
 		String[] params = body.split(","); 
@@ -122,7 +116,7 @@ public class ParkhausServlet extends HttpServlet {
 				
 		if("leave".equals(event)) {		
 			//Automatische Ausparkfunktion
-			system.ausparkSystem(params);		
+			system.ausparkSystem(params);
 		}
 		
 		if("change_max".equals(event)) {

@@ -21,21 +21,21 @@ public class Graphs {
 			output = spots(spots.stream());
 			
 		}else if(chart.equals("parkdauer")) {
-			ArrayList<Car> cars = (ArrayList<Car>) list;
-			output = parkdauer(cars.stream());
+			ArrayList<String> parktime = (ArrayList<String>) list;
+			output = parkdauer(parktime.stream());
 		}
 		return output;
 	}
 	
 	
-	private static String parkdauer(Stream<Car> stream) {
+	private static String parkdauer(Stream<String> stream) {
 		String output = "";
 		
 //		Ablage des CarStreams
-		ArrayList<Car> streamContainer = new ArrayList<Car>(stream.collect(Collectors.toList()));
+		ArrayList<String> streamContainer = new ArrayList<String>(stream.collect(Collectors.toList()));
 //		Rundet Parkdauer zur nächsten Minute auf/ab
 		List<String> dauerList = streamContainer.stream()
-				.map(x -> Integer.toString(Math.round(Float.parseFloat(x.getParkdauer()))) + " Sekunden").collect(Collectors.toList());
+				.map(x -> Integer.toString(Math.round(Float.parseFloat(x)/1000)) + " Minuten").collect(Collectors.toList());
 //		Zählt Aufkommen der einzelnen Parkzeiten
 		Map<String, Long> counter = dauerList.stream()
 				.collect(Collectors.groupingBy(x -> x, Collectors.counting()));
