@@ -1,13 +1,12 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class ParkhausSystem implements IObserver {
+public class ParkhausSystem implements IModel {
 
-	private boolean alarm;
 	private ArrayList<Car> spots;
 	private Integer maxPark;
 	private IParkBehavior parkBehav;
 	private Statistics stats;
+	private ArrayList<IObserver> observers = new ArrayList<IObserver>();
 
 	
 	public ParkhausSystem(IParkBehavior parkBehav) {
@@ -18,36 +17,7 @@ public class ParkhausSystem implements IObserver {
 		this.stats = new Statistics(this);
 	}
 	
-	@Override
-	public void update(boolean alarm) {
-		setAlarm(alarm);
-	}
-	
-	public int einparkSystem(String[] params) {
-		return getParkBehavior().einparkSystem(this, params);
-	}
-	
-	public void ausparkSystem(String[] params) {
-		Integer freeParkIndex = Integer.parseInt(params[7])-1;
-//		Nimmt betreffendes Fahrzeug aus der ArrayList
-		ArrayList<Car> spots = getSpots();
-		Car cTemp = spots.get(freeParkIndex);
-		cTemp.setAttributes(params);
-		
-//		Berechne sumPrice, avgPrice und anzahlBesucher
-		getStats().calculate(cTemp.getPreis(), cTemp.getParkdauer());
 
-//		speichert Dauer des Parkvorgangs		
-		getStats().timeData(cTemp.getParkdauer());
-		
-		//Zaehlt besuchten Parkplatz
-		getStats().countSpots(params[7]);
-		
-//		Setzt Instanz zurück und setzt Position in der Arraylist auf null
-		cTemp.clearAttributes();
-		spots.set(freeParkIndex, null);
-		setSpots(spots);	
-	}
 	
 	
 	public void changeMax(String[] params) {
@@ -74,6 +44,7 @@ public class ParkhausSystem implements IObserver {
 	
 	public void setSpots(ArrayList<Car> spots) {
 		this.spots = spots;
+		notifyObservers();
 	}
 
 	public Integer getMaxPark() {
@@ -83,14 +54,6 @@ public class ParkhausSystem implements IObserver {
 	public void setMaxPark(Integer maxPark) {
 		this.maxPark = maxPark;
 	}
-	
-	public boolean getAlarm() {
-		return this.alarm;
-	}
-	
-	public void setAlarm(boolean alarm) {
-		this.alarm = alarm;
-	}
 
 	public IParkBehavior getParkBehavior() {
 		return this.parkBehav;
@@ -98,6 +61,7 @@ public class ParkhausSystem implements IObserver {
 	
 	public void setParkBehavior(IParkBehavior parkBehav) {
 		this.parkBehav = parkBehav;
+		notifyObservers();
 	}
 	
 	public Statistics getStats() {
@@ -106,6 +70,26 @@ public class ParkhausSystem implements IObserver {
 	
 	public void setStats(Statistics stats) {
 		this.stats = stats;
+		notifyObservers();
+	}
+
+	@Override
+	public void add(IObserver o) {
+		// TODO Auto-generated method stub
+		observers.add(o);
+	}
+
+	@Override
+	public void remove(IObserver o) {
+		// TODO Auto-generated method stub
+		observers.remove(o);
+	}
+
+	@Override
+	public void notifyObservers() {
+		for(int i = 0; i < observers.size(); i++) {
+			observers.get(i).update();
+		}
 	}
 
 }

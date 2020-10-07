@@ -38,29 +38,6 @@ class ParkhausSystemTest implements IParkhausSystemTest {
 		state.notify(false);
 	}
 
-	@DisplayName("Alarmfunktion")
-	@Test
-	public void testAlarmFunktion() {
-		//Zu Beginn sollte Alarm aus sein.
-		assertEquals(false, system.getAlarm());
-		//Parke Auto ein
-		assertEquals(1, system.einparkSystem(AusAuto1));
-		//Löse Alarm aus
-		state.notify(true);
-		//ParkhausSystem Klasse sollte informiert worden sein
-		assertEquals(true, system.getAlarm());
-		//Einparken sollte gesperrt sein
-		assertEquals(-1, system.einparkSystem(AusAuto2));
-		//Ausparken sollte weiterhin funktionieren
-		system.ausparkSystem(AusAuto1);
-		//Daher sollte nun der erste Parkplatz wieder frei sein
-		assertEquals(null, system.getSpots().get(0));
-		//Alarm wieder austellen
-		state.notify(false);
-		//Nun sollte das zweite Auto wieder einparken können
-		assertEquals(1, system.einparkSystem(AusAuto2));
-	}
-
 	@DisplayName("Einpark(Default) und Ausparkfunktion Belegungsreihenfolge")
 	@Test
 	public void testEinAusParkenDefault() {

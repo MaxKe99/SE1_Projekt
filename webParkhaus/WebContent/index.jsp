@@ -12,7 +12,7 @@
 	vehicle_types='["PKW","SUV","Pickup","Zweirad","Trike","Quad"]'
 	server_url="http://localhost:8080/webParkhaus/Parkhaus"
 	client_categories='["red","blue","green"]'
-	extra_buttons='["sum","avg","Alarm","ChangeParkSystem"]'
+	extra_buttons='["sum","avg","ChangeParkSystem"]'
 	extra_charts='["Auslastung","Parkdauer"]'
 ></ccm-parkhaus-9-1-7>
 

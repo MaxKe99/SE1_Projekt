@@ -22,18 +22,11 @@ public class ParkhausServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void init() {
-		//Initialisiere Alarmsystem
-		ParkhausState state = getState();
+//		init Controller
+		Controller controller = getController();
 		//Initialisiere ParkhausSystem
-		ParkhausSystem system = getSystem();
-		
-		state.add(system);
-		
-		//Setze Alarm auf false
-		state.notify(false);
-		
-		getApplication().setAttribute("state", state);
-		getApplication().setAttribute("system", system);
+		getApplication().setAttribute("controller", controller);
+		getApplication().setAttribute("system", controller.getSystem());
 	}
 	
 	
@@ -48,7 +41,6 @@ public class ParkhausServlet extends HttpServlet {
 		DecimalFormat df = new DecimalFormat();
 		df.setMaximumFractionDigits(2);
 		
-		ParkhausState state = getState();
 		ParkhausSystem system = getSystem();
 		
 		//SummenButton
@@ -61,17 +53,6 @@ public class ParkhausServlet extends HttpServlet {
 		if("cmd".equals(command)&&"avg".equals(param)) {
 			out.println("Durchschnittlicher Ticketpreis: " + df.format(system.getStats().getAvgPrice()) + " Euro;" + " " + "Durchschnittliche Parkdauer: " + df.format(system.getStats().getAvgDauer()) + " Minuten");
 			System.out.println("avgPrice = " + df.format(system.getStats().getAvgPrice()) + " Euro;" + " " + "AvgDur: " + df.format(system.getStats().getAvgDauer()) + " Minuten");
-		}
-			
-		//AlarmButton
-		if("cmd".equals(command)&&"Alarm".equals(param)) {
-			if(state.getAlarm() == false) {
-				state.notify(true);
-				out.println("Alarm wurde aktiviert. Kein Einparken mehr.");	
-			}else {
-				state.notify(false);
-				out.println("Alarm wurde deaktiviert. Einparken wieder erlaubt");	
-			}					
 		}
 		
 		//ChangeParkSystem Button
@@ -98,7 +79,6 @@ public class ParkhausServlet extends HttpServlet {
 			out.println(Graphs.create(parktime, "Parkdauer"));
 		}
 		
-		getApplication().setAttribute("state", state);
 		getApplication().setAttribute("system", system);
 	}
 
@@ -106,6 +86,8 @@ public class ParkhausServlet extends HttpServlet {
 		ParkhausSystem system = getSystem();
 		String body = getBody(request);
 		System.out.println(body);
+		
+		Controller controller = getController();
 		
 		//String der Parkhaus Api einlesen
 		String[] params = body.split(","); 
@@ -116,7 +98,7 @@ public class ParkhausServlet extends HttpServlet {
 				
 		if("leave".equals(event)) {		
 			//Automatische Ausparkfunktion
-			system.ausparkSystem(params);
+			controller.ausparkSystem(params);
 		}
 		
 		if("change_max".equals(event)) {
@@ -126,9 +108,9 @@ public class ParkhausServlet extends HttpServlet {
 		
 		if("enter".equals(event)) {
 			//Automatische Einparkfunktion
-			out.println(system.einparkSystem(params));
+			out.println(controller.einparkSystem(params));
 		}
-		getApplication().setAttribute("system", system);
+		getApplication().setAttribute("controller", controller);
 	}
 	
 	//Methode um Request in einen String umzuwandeln
@@ -164,24 +146,23 @@ public class ParkhausServlet extends HttpServlet {
 		return getServletConfig().getServletContext();
 	}
 			
-	private ParkhausState getState() {
-		ParkhausState state;
+	private Controller getController() {
+		Controller controller;
+		
 		ServletContext application = getApplication();
-		state = (ParkhausState)application.getAttribute("state");
-		if(state == null) {
-			state = new ParkhausState();
+		controller = (Controller)application.getAttribute("controller");
+		if(controller == null) {
+			controller = new Controller();
 		}
-		return state;
+		
+		return controller;
 	}
 	
 	private ParkhausSystem getSystem() {
-		ParkhausSystem system;
+		Controller controller;
 		ServletContext application = getApplication();
-		system = (ParkhausSystem)application.getAttribute("system");
-		if(system == null) {
-			system = new ParkhausSystem(new ParkDefault());
-		}
-		return system;
+		controller = (Controller)application.getAttribute("controller");
+		return controller.getSystem();
 	}
 	
 }

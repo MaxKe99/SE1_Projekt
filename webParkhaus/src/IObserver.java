@@ -1,6 +1,6 @@
 
 public interface IObserver {
 
-	public void update(boolean alarm);
+	public void update();
 	
 }
