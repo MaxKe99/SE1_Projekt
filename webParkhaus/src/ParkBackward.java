@@ -9,6 +9,9 @@ public class ParkBackward implements IParkBehavior {
 		//Rufe Instanz des angefragten Fahrzeugtyps ab
 		Car newCar = Car.getInstance(params[9]);
 		newCar.initAttributes(params);
+		
+		system.updateLast(params[9], params[2]);
+		
 		System.out.println("Auto wurde hinzugefügt: "+params[9]+ " " + newCar);	
 		//Einparkfunktion
 		ArrayList<Car> spots = system.getSpots();
