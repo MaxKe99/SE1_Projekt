@@ -23,6 +23,9 @@ public class Graphs {
 		}else if(chart.equals("parkdauer")) {
 			ArrayList<String> parktime = (ArrayList<String>) list;
 			output = parkdauer(parktime.stream());
+		}else if(chart.equals("fahrzeugtypen")) {
+			ArrayList<String> types = (ArrayList<String>) list;
+			output = typen(types.stream());
 		}
 		return output;
 	}
@@ -96,6 +99,38 @@ public class Graphs {
 		System.out.println(output);
 		return output;
 		
+	}
+	
+	private static String typen(Stream<String> stream) {
+		String output = "";
+		
+		Map<String, Long> counter = stream
+				.collect(Collectors.groupingBy(x -> x, Collectors.counting()));
+		
+		ArrayList<String> descriptors = new ArrayList<String>();
+		descriptors.addAll(counter.keySet());
+		
+		ArrayList<Long> counts = new ArrayList<Long>();
+		for(int i = 0; i < descriptors.size(); i++) {
+			counts.add(counter.get(descriptors.get(i)));
+		}
+		
+		JsonArray xWerte = Json.createArrayBuilder(descriptors).build();
+		JsonArray yWerte = Json.createArrayBuilder(counts).build();	
+
+		JsonObject root = Json.createObjectBuilder()
+				.add("data", Json.createArrayBuilder()
+						.add(Json.createObjectBuilder()
+							.add("values",yWerte)
+							.add("labels", xWerte)
+							.add("type", "pie")
+						)	
+					)	
+				.build();
+		output = root.toString();
+		System.out.println(output);
+		
+		return output;
 	}
 
 	

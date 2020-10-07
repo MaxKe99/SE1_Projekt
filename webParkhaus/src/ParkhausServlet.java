@@ -27,6 +27,7 @@ public class ParkhausServlet extends HttpServlet {
 		//Initialisiere ParkhausSystem
 		getApplication().setAttribute("controller", controller);
 		getApplication().setAttribute("system", controller.getSystem());
+		controller.getSystem().getStats().setCreation(System.currentTimeMillis());
 	}
 	
 	
@@ -35,6 +36,8 @@ public class ParkhausServlet extends HttpServlet {
 		String command = requestParamString[0];
 		String param = requestParamString[1];
 		
+
+		
 		response.setContentType("text/html"); 
 		PrintWriter out = response.getWriter(); 
 //		Erlaubt zwei Nachkommastellen bei Zahlen
@@ -42,7 +45,7 @@ public class ParkhausServlet extends HttpServlet {
 		df.setMaximumFractionDigits(2);
 		
 		ParkhausSystem system = getSystem();
-		
+				
 		//SummenButton
 		if("cmd".equals(command)&&"sum".equals(param)) {		
 			out.println(df.format(system.getStats().getSum()) + " Euro");
@@ -78,6 +81,20 @@ public class ParkhausServlet extends HttpServlet {
 			ArrayList<String> parktime = system.getStats().getParktime();
 			out.println(Graphs.create(parktime, "Parkdauer"));
 		}
+//		Typenchart
+		if("cmd".equals(command)&&"Fahrzeugtypen".equals(param)) {
+			ArrayList<String> types = system.getStats().getCarType();
+			out.println(Graphs.create(types, "Fahrzeugtypen"));
+		}
+//		Admin u. Customerview
+		if("cmd".equals(command)&&"Einnahmenverteilung".equals(param)) {
+			System.out.println(system.getAdmin().getOutput());
+			out.println(system.getAdmin().getOutput());
+		}	
+		if("cmd".equals(command)&&"Bisheriger_Preis".equals(param)) {
+			system.notifyObservers();
+			out.println(df.format(system.getCustomer().getOutput()) + " Euro");
+		}
 		
 		getApplication().setAttribute("system", system);
 	}
@@ -86,8 +103,9 @@ public class ParkhausServlet extends HttpServlet {
 		ParkhausSystem system = getSystem();
 		String body = getBody(request);
 		System.out.println(body);
-		
+
 		Controller controller = getController();
+
 		
 		//String der Parkhaus Api einlesen
 		String[] params = body.split(","); 

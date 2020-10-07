@@ -2,7 +2,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class Car {
-	
 	private String nr;
 	private String farbe;
 	private String parkdauer;
@@ -70,6 +69,9 @@ public class Car {
 
 	public void setPreis(String preis) {
 		this.preis = preis;
+	}
+	public String getKey() {
+		return key;
 	}
 	
 	

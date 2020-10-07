@@ -3,22 +3,29 @@ import java.util.ArrayList;
 public class ParkhausSystem implements IModel {
 
 	private ArrayList<Car> spots;
+	private ArrayList<String> lastParked;
 	private Integer maxPark;
 	private IParkBehavior parkBehav;
 	private Statistics stats;
 	private ArrayList<IObserver> observers = new ArrayList<IObserver>();
 
+
 	
 	public ParkhausSystem(IParkBehavior parkBehav) {
 		this.spots = new ArrayList<Car>();
+		this.lastParked = new ArrayList<String>();
 		this.maxPark = 10;
 		while(spots.size() < maxPark) spots.add(null);
 		this.parkBehav = parkBehav;
 		this.stats = new Statistics(this);
+		this.lastParked.add("PKW");
+		this.lastParked.add("0");
 	}
 	
-
-	
+	public void updateLast(String type, String time) {
+		lastParked.set(0, type);
+		lastParked.set(1, time);
+		}
 	
 	public void changeMax(String[] params) {
 		String maxParkString = params[2];
@@ -36,6 +43,13 @@ public class ParkhausSystem implements IModel {
 		}	
 	}
 	
+	public ViewAdmin getAdmin() {
+		return (ViewAdmin) observers.get(0);
+	}
+	
+	public ViewCustomer getCustomer() {
+		return (ViewCustomer) observers.get(1);
+	}
 		
 	//Getter und Setter	
 	public ArrayList<Car> getSpots() {
@@ -90,6 +104,14 @@ public class ParkhausSystem implements IModel {
 		for(int i = 0; i < observers.size(); i++) {
 			observers.get(i).update();
 		}
+	}
+
+	public ArrayList<String> getLastParked() {
+		return lastParked;
+	}
+
+	public void setLastParked(ArrayList<String> lastParked) {
+		this.lastParked = lastParked;
 	}
 
 }

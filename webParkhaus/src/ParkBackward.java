@@ -12,6 +12,8 @@ public class ParkBackward implements IParkBehavior {
 		System.out.println("Auto wurde hinzugefügt: "+params[9]+ " " + newCar);	
 		//Einparkfunktion
 		ArrayList<Car> spots = system.getSpots();
+		ArrayList<String> typ = system.getStats().getCarType();
+		typ.add(newCar.getKey());
 			
 		int j = spots.lastIndexOf(null);
 		spots.set(j, newCar);
