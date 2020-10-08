@@ -21,7 +21,7 @@ public class ViewCustomer implements IObserver{
 		
 	}
 //	Berechnung des Preises für gegebenen Fahrzeugtyp
-	public double calcPrice(String type, String time) {
+	private double calcPrice(String type, String time) {
 		switch(type) {
 		case "SUV":
 			return Double.parseDouble(time) * 1.5;
