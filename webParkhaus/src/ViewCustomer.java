@@ -12,7 +12,7 @@ public class ViewCustomer implements IObserver{
 		createComponents();
 		model.add(this);
 	}
-	
+//	Erste Berechnung der Kosten
 	private void createComponents() {
 		currentCustomer = model.getLastParked();
 		time = System.currentTimeMillis();
@@ -20,7 +20,7 @@ public class ViewCustomer implements IObserver{
 		setOutput(calcPrice(currentCustomer.get(0), difference));
 		
 	}
-	
+//	Berechnung des Preises für gegebenen Fahrzeugtyp
 	public double calcPrice(String type, String time) {
 		switch(type) {
 		case "SUV":
@@ -39,6 +39,7 @@ public class ViewCustomer implements IObserver{
 		
 	}
 
+//	Aktualisierung der Berechnung für die aktuelle Systemzeit
 	@Override
 	public void update() {
 		

@@ -7,13 +7,16 @@ public class Statistics {
 	private float avgDauer;
 	private float gesamtDauer;
 	private float sum;
-	private ArrayList<Integer> spots;
-	private ArrayList<String> parktime;
-	private ArrayList<String> carType;
 	private double creation;
 	private float incomeDay;
 	private float incomeWeek;
 	private int dayCounter;
+//	Speichert Nuztung der einzelnen Parkplätze
+	private ArrayList<Integer> spots;
+//	Speichert Parklänge der einzelnen Kunden
+	private ArrayList<String> parktime;
+//	Speichert Fahrzeugtyp der einzelnen Kunden
+	private ArrayList<String> carType;
 	
 	public Statistics(ParkhausSystem system) {
 		this.dayCounter = 1;

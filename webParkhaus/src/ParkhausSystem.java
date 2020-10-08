@@ -2,15 +2,18 @@ import java.util.ArrayList;
 
 public class ParkhausSystem implements IModel {
 
+//	Verwaltung der parkenden Fahrzeuge, Fahrzeuge desselben Typs benutzen identische Instanzen,
+//	deren Daten bei aussparken aktualisiert und zurückgesetzt werden
 	private ArrayList<Car> spots;
+//	Einparkzeit und Typ des letzten Fahrzeugs, welches in die Garage eingefahren ist
 	private ArrayList<String> lastParked;
+	
 	private Integer maxPark;
 	private IParkBehavior parkBehav;
 	private Statistics stats;
+//	Speichert Observer/Views
 	private ArrayList<IObserver> observers = new ArrayList<IObserver>();
 
-
-	
 	public ParkhausSystem(IParkBehavior parkBehav) {
 		this.spots = new ArrayList<Car>();
 		this.lastParked = new ArrayList<String>();
@@ -21,7 +24,7 @@ public class ParkhausSystem implements IModel {
 		this.lastParked.add("PKW");
 		this.lastParked.add("0");
 	}
-	
+//	Aktualisiert letztes Fahrzeug, welches in das Parkhaus eingefahren ist
 	public void updateLast(String type, String time) {
 		lastParked.set(0, type);
 		lastParked.set(1, time);
@@ -43,15 +46,16 @@ public class ParkhausSystem implements IModel {
 		}	
 	}
 	
+//	Getter und Setter
+//	Entimmt den AdminView
 	public ViewAdmin getAdmin() {
 		return (ViewAdmin) observers.get(0);
 	}
-	
+//	Entimmt den CustomerView
 	public ViewCustomer getCustomer() {
 		return (ViewCustomer) observers.get(1);
 	}
 		
-	//Getter und Setter	
 	public ArrayList<Car> getSpots() {
 		return spots;
 	}
@@ -86,16 +90,23 @@ public class ParkhausSystem implements IModel {
 		this.stats = stats;
 		notifyObservers();
 	}
+	
+	public ArrayList<String> getLastParked() {
+		return lastParked;
+	}
 
+	public void setLastParked(ArrayList<String> lastParked) {
+		this.lastParked = lastParked;
+	}
+
+//	Methoden des Modell-Patterns
 	@Override
 	public void add(IObserver o) {
-		// TODO Auto-generated method stub
 		observers.add(o);
 	}
 
 	@Override
 	public void remove(IObserver o) {
-		// TODO Auto-generated method stub
 		observers.remove(o);
 	}
 
@@ -104,14 +115,6 @@ public class ParkhausSystem implements IModel {
 		for(int i = 0; i < observers.size(); i++) {
 			observers.get(i).update();
 		}
-	}
-
-	public ArrayList<String> getLastParked() {
-		return lastParked;
-	}
-
-	public void setLastParked(ArrayList<String> lastParked) {
-		this.lastParked = lastParked;
 	}
 
 }

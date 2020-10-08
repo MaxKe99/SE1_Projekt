@@ -13,8 +13,7 @@ public class ViewAdmin implements IObserver{
 		createComponents();
 		model.add(this);
 	}
-	
-	
+//	Erste Berechnung des Outputs
 	private void createComponents() {
 		ArrayList<Integer> heights = new ArrayList<Integer>();
 		heights.add(Math.round(model.getStats().getIncomeDay()));
@@ -23,6 +22,7 @@ public class ViewAdmin implements IObserver{
 		
 	}
 
+//	Methode zur Erstellung des JSON-Strings
 	private void createJson(ArrayList<Integer> heights) {
 		
 		ArrayList<String> descriptors = new ArrayList<String>();
@@ -44,6 +44,7 @@ public class ViewAdmin implements IObserver{
 		output = root.toString();
 	}
 
+//	Aktualisierung der Berechnung
 	@Override
 	public void update() {
 		ArrayList<Integer> heights = new ArrayList<Integer>();
@@ -52,11 +53,9 @@ public class ViewAdmin implements IObserver{
 		createJson(heights);
 	}
 
-
 	public String getOutput() {
 		return output;
 	}
-
 
 	public void setOutput(String output) {
 		this.output = output;

@@ -9,7 +9,7 @@ public class ParkBackward implements IParkBehavior {
 		//Rufe Instanz des angefragten Fahrzeugtyps ab
 		Car newCar = Car.getInstance(params[9]);
 		newCar.initAttributes(params);
-		
+//		Setze neues Fahrzeug als Berechnungspunkt für aktuelle Ticketkosten für ViewCustomer
 		system.updateLast(params[9], params[2]);
 		
 		System.out.println("Auto wurde hinzugefügt: "+params[9]+ " " + newCar);	

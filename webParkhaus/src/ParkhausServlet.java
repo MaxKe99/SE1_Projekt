@@ -23,10 +23,11 @@ public class ParkhausServlet extends HttpServlet {
 
 	public void init() {
 //		init Controller
-		Controller controller = getController();
-		//Initialisiere ParkhausSystem
+		ParkhausController controller = getController();
 		getApplication().setAttribute("controller", controller);
+//		nimmt System aus Controller
 		getApplication().setAttribute("system", controller.getSystem());
+//		speichert Erstellungszeit der Session
 		controller.getSystem().getStats().setCreation(System.currentTimeMillis());
 	}
 	
@@ -36,8 +37,6 @@ public class ParkhausServlet extends HttpServlet {
 		String command = requestParamString[0];
 		String param = requestParamString[1];
 		
-
-		
 		response.setContentType("text/html"); 
 		PrintWriter out = response.getWriter(); 
 //		Erlaubt zwei Nachkommastellen bei Zahlen
@@ -45,21 +44,21 @@ public class ParkhausServlet extends HttpServlet {
 		df.setMaximumFractionDigits(2);
 		
 		ParkhausSystem system = getSystem();
-				
+		
 		//SummenButton
-		if("cmd".equals(command)&&"sum".equals(param)) {		
-			out.println(df.format(system.getStats().getSum()) + " Euro");
+		if("cmd".equals(command)&&"Gesamteinnahmen".equals(param)) {		
+			out.println("Gesamteinnahmen = " + df.format(system.getStats().getSum()) + " Euro");
 			System.out.println("sum = " + df.format(system.getStats().getSum()) + " Euro");
 		}
 		
 		//AverageButton
-		if("cmd".equals(command)&&"avg".equals(param)) {
+		if("cmd".equals(command)&&"Durschnitt".equals(param)) {
 			out.println("Durchschnittlicher Ticketpreis: " + df.format(system.getStats().getAvgPrice()) + " Euro;" + " " + "Durchschnittliche Parkdauer: " + df.format(system.getStats().getAvgDauer()) + " Minuten");
 			System.out.println("avgPrice = " + df.format(system.getStats().getAvgPrice()) + " Euro;" + " " + "AvgDur: " + df.format(system.getStats().getAvgDauer()) + " Minuten");
 		}
 		
 		//ChangeParkSystem Button
-		if("cmd".equals(command)&&"ChangeParkSystem".equals(param)) {
+		if("cmd".equals(command)&&"Andere Parkrichtung".equals(param)) {
 			if(system.getParkBehavior() instanceof ParkDefault) {
 				out.println("Parkverhalten: Backward");
 				system.setParkBehavior(new ParkBackward());
@@ -90,10 +89,10 @@ public class ParkhausServlet extends HttpServlet {
 		if("cmd".equals(command)&&"Einnahmenverteilung".equals(param)) {
 			System.out.println(system.getAdmin().getOutput());
 			out.println(system.getAdmin().getOutput());
-		}	
+		}
 		if("cmd".equals(command)&&"Bisheriger_Preis".equals(param)) {
 			system.notifyObservers();
-			out.println(df.format(system.getCustomer().getOutput()) + " Euro");
+			out.println("Die aktuellen Kosten betragen" + df.format(system.getCustomer().getOutput()) + " Euro");
 		}
 		
 		getApplication().setAttribute("system", system);
@@ -104,8 +103,7 @@ public class ParkhausServlet extends HttpServlet {
 		String body = getBody(request);
 		System.out.println(body);
 
-		Controller controller = getController();
-
+		ParkhausController controller = getController();
 		
 		//String der Parkhaus Api einlesen
 		String[] params = body.split(","); 
@@ -164,22 +162,22 @@ public class ParkhausServlet extends HttpServlet {
 		return getServletConfig().getServletContext();
 	}
 			
-	private Controller getController() {
-		Controller controller;
+	private ParkhausController getController() {
+		ParkhausController controller;
 		
 		ServletContext application = getApplication();
-		controller = (Controller)application.getAttribute("controller");
+		controller = (ParkhausController)application.getAttribute("controller");
 		if(controller == null) {
-			controller = new Controller();
+			controller = new ParkhausController();
 		}
 		
 		return controller;
 	}
 	
 	private ParkhausSystem getSystem() {
-		Controller controller;
+		ParkhausController controller;
 		ServletContext application = getApplication();
-		controller = (Controller)application.getAttribute("controller");
+		controller = (ParkhausController)application.getAttribute("controller");
 		return controller.getSystem();
 	}
 	

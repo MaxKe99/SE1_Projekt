@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 
-public class Controller implements IController{
-	
+public class ParkhausController implements IController{
+//	Controller des Parkhauses verwaltet System, Views und die Ein- und Ausparkfunktion
 	private ParkhausSystem system;
 	
-
-	public Controller() {
+//	initialisiert Views und das System
+	public ParkhausController() {
 		system = new ParkhausSystem(new ParkDefault());
 		new ViewAdmin(system);
 		new ViewCustomer(system);

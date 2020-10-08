@@ -8,83 +8,76 @@ import org.junit.jupiter.api.Test;
 
 class ParkhausSystemTest implements IParkhausSystemTest {
 	
-	ParkhausSystem system;
-	ParkhausState state;
+	ParkhausController pController = new ParkhausController();
 	
 	//Konstruiere die String Arrays für drei Autos
-	String paramEin1 = "enter,198,1600287775708,_,_,a18f72fad189b4353bf37eb4b9c1bb56,#8c581d,6,red,PKW,198";
-	String paramAus1 = "leave,198,1600287779236,3509,351,0b277c939866d49e2b00b39fca224e1d,#8c581d,1,red,PKW,198";		
+	String paramEin1 = "enter,285,1602151988008,_,_,64c4d605fcc1cb724a7fec1a7193dd41,#a86fe8,8,_,Trike,285";
+	String paramAus1 = "leave,285,1602151989099,1082,81,64c4d605fcc1cb724a7fec1a7193dd41,#a86fe8,1,_,Trike,285";		
 	String[] EinAuto1 = paramEin1.split(","); 
 	String[] AusAuto1 = paramAus1.split(",");
 		
-	String paramEin2 = "enter,204,1600287830797,_,_,10212b62b42bf41b8c287ab045ab0b2c,#fc6e11,3,red,SUV,204";
-	String paramAus2 = "leave,204,1600287832803,1985,199,27b017fdf143cfabb809da0d19b5f0c1,#fc6e11,2,red,SUV,204";
+	String paramEin2 = "enter,578,1602152541856,_,_,34da6ad2811bf2c016e3448c18fb7b71,#18a96e,3,_,PKW,578";
+	String paramAus2 = "leave,578,1602152542450,582,58,34da6ad2811bf2c016e3448c18fb7b71,#18a96e,1,_,PKW,578";
 	String[] EinAuto2 = paramEin2.split(","); 
 	String[] AusAuto2 = paramAus2.split(","); 
 		
-	String paramEin3 = "enter,948,1600288100348,_,_,4dbb42a885e54d4898cfc8f0ded95a2a,#a034ca,2,red,Quad,948";
-	String paramAus3 = "leave,948,1600288102327,1961,196,4e702cc3cf14bd15c873c321aa0aba9a,#a034ca,3,red,Quad,948";
+	String paramEin3 = "enter,627,1602152048772,_,_,6ce6f4fa47f4b606b8d6d9c8b4df6912,#e45133,5,_,Zweirad,627";
+	String paramAus3 = "leave,627,1602152049189,407,20,6ce6f4fa47f4b606b8d6d9c8b4df6912,#e45133,1,_,Zweirad,627";
 	String[] EinAuto3 = paramEin3.split(","); 
 	String[] AusAuto3 = paramAus3.split(","); 
+	
 	
 	
 	@BeforeEach
 	void init() {
 		//Damit Parkhaus vor jedem Test leer ist
-		system = new ParkhausSystem(new ParkDefault());
-		state = new ParkhausState();
-		state.add(system);
-		//Setze Alarm auf false
-		state.notify(false);
+		pController.getSystem().getStats().setCreation(System.currentTimeMillis());
 	}
 
+	
+	
 	@DisplayName("Einpark(Default) und Ausparkfunktion Belegungsreihenfolge")
 	@Test
 	public void testEinAusParkenDefault() {
 		//Erstes Auto sollte ersten Parkplatz belegen
-		assertEquals(1,system.einparkSystem(EinAuto1));
+		assertEquals(1, pController.einparkSystem(EinAuto1));
 		//Zweites Auto sollte zweiten Parkplatz belegen
-		assertEquals(2,system.einparkSystem(EinAuto2));
-		//Zweites Auto ausparken
-		system.ausparkSystem(AusAuto2);
-		//Drittes Auto sollte auf Parkplatz zwei sein
-		assertEquals(2,system.einparkSystem(EinAuto3));
+		assertEquals(2, pController.einparkSystem(EinAuto2));
+		//Drittes Auto sollte auf Parkplatz drei sein
+		assertEquals(3, pController.einparkSystem(EinAuto3));
 		//Erster Parkplatz wird frei
-		system.ausparkSystem(AusAuto1);
+		pController.ausparkSystem(AusAuto1);
 		//Es sollte vorne aufgefüllt werden
-		assertEquals(1,system.einparkSystem(EinAuto2));
-		//Wenn nun wieder Auto1 einparkt sollte der dritte
-		//Parkplatz belegt sein, da 1 und 2 ja voll sind
-		assertEquals(3,system.einparkSystem(EinAuto1));
+		assertEquals(1, pController.einparkSystem(EinAuto2));
 	}
 	
 	@DisplayName("Einpark(Backward) und Ausparkfunktion Belegungsreihenfolge")
 	@Test
 	public void testEinAusParkenBackward() {
-		system.setParkBehavior(new ParkBackward());
+		pController.getSystem().setParkBehavior(new ParkBackward());
 		//Erstes Auto sollte letzten Parkplatz belegen
-		assertEquals(10,system.einparkSystem(EinAuto1));
+		assertEquals(10, pController.einparkSystem(EinAuto1));
 		//Zweites Auto sollte vorletzten Parkplatz belegen
-		assertEquals(9,system.einparkSystem(EinAuto2));
+		assertEquals(9, pController.einparkSystem(EinAuto2));
 		//Zweites Auto ausparken
 		AusAuto2[7] = "9";
-		system.ausparkSystem(AusAuto2);
+		pController.ausparkSystem(AusAuto2);
 		//Drittes Auto sollte dann auf dem vorletzten Parkplatz sein
-		assertEquals(9,system.einparkSystem(EinAuto3));
+		assertEquals(9, pController.einparkSystem(EinAuto3));
 		//Letzter Parkplatz wird frei
 		AusAuto1[7] = "10";
-		system.ausparkSystem(AusAuto1);
+		pController.ausparkSystem(AusAuto1);
 		//Es sollte ganz hinten aufgefüllt werden
-		assertEquals(10,system.einparkSystem(EinAuto2));
+		assertEquals(10, pController.einparkSystem(EinAuto2));
 		//Wenn nun wieder Auto1 einparkt sollte der 8.
 		//Parkplatz belegt werden, da 10 und 9 ja voll sind
-		assertEquals(8,system.einparkSystem(EinAuto1));
+		assertEquals(8, pController.einparkSystem(EinAuto1));
 	}
 
 	@DisplayName("Parkhaus Größe verändern")
 	@Test
 	public void testChangeMax() {
-		system.setParkBehavior(new ParkBackward());
+		pController.getSystem().setParkBehavior(new ParkBackward());
 		String changeTo11 = "change_max,10,11";
 		String changeTo12 = "change_max,11,12";
 		String changeTo10 = "change_max,11,10";
@@ -95,60 +88,60 @@ class ParkhausSystemTest implements IParkhausSystemTest {
 		String[] to10 =  changeTo10.split(","); 
 		String[] to9 =  changeTo9.split(","); 
 		String[] to8 =  changeTo8.split(",");
-		system.changeMax(to11);
+		pController.getSystem().changeMax(to11);
 		//Letzter belegter Parkplatz sollte 11 sein
-		assertEquals(11,system.einparkSystem(EinAuto1));
+		assertEquals(11, pController.einparkSystem(EinAuto1));
 		//Parke aus, weil Parkplatz 11 im Test gleich nochmal belegt wird
 		AusAuto1[7] = "11";
-		system.ausparkSystem(AusAuto1);
-		assertEquals(11, system.getMaxPark());
+		pController.ausparkSystem(AusAuto1);
+		assertEquals(11, pController.getSystem().getMaxPark());
 		//Zu 12
-		system.changeMax(to12);
-		assertEquals(12,system.einparkSystem(EinAuto1));
-		assertEquals(12, system.getMaxPark());
+		pController.getSystem().changeMax(to12);
+		assertEquals(12, pController.einparkSystem(EinAuto1));
+		assertEquals(12, pController.getSystem().getMaxPark());
 		//zurück zu 11
-		system.changeMax(to11);
-		assertEquals(11,system.einparkSystem(EinAuto1));
-		assertEquals(11, system.getMaxPark());
+		pController.getSystem().changeMax(to11);
+		assertEquals(11,pController.einparkSystem(EinAuto1));
+		assertEquals(11, pController.getSystem().getMaxPark());
 		//zurück zu 10
-		system.changeMax(to10);
-		assertEquals(10,system.einparkSystem(EinAuto1));
-		assertEquals(10, system.getMaxPark());
+		pController.getSystem().changeMax(to10);
+		assertEquals(10,pController.einparkSystem(EinAuto1));
+		assertEquals(10, pController.getSystem().getMaxPark());
 		//zu 9
-		system.changeMax(to9);
-		assertEquals(9,system.einparkSystem(EinAuto1));
-		assertEquals(9, system.getMaxPark());
+		pController.getSystem().changeMax(to9);
+		assertEquals(9,pController.einparkSystem(EinAuto1));
+		assertEquals(9, pController.getSystem().getMaxPark());
 		//zu 8
-		system.changeMax(to8);
-		assertEquals(8,system.einparkSystem(EinAuto1));
-		assertEquals(8, system.getMaxPark());
+		pController.getSystem().changeMax(to8);
+		assertEquals(8,pController.einparkSystem(EinAuto1));
+		assertEquals(8, pController.getSystem().getMaxPark());
 	}
 
 	@DisplayName("Teste ob Statistiken richtig erfasst werden")
 	@Test
 	public void testStatistics() {
 		//Lasse drei Autos ein- und wieder ausparken
-		system.einparkSystem(EinAuto1);
-		system.einparkSystem(EinAuto2);
-		system.einparkSystem(EinAuto3);
+		pController.einparkSystem(EinAuto1);
+		pController.ausparkSystem(AusAuto1);
 		
-		system.ausparkSystem(AusAuto1);
-		system.ausparkSystem(AusAuto2);
-		system.ausparkSystem(AusAuto3);
+		pController.einparkSystem(EinAuto2);
+		pController.ausparkSystem(AusAuto2);
 		
-		//Anzahl Besucher sollte drei sein
-		assertEquals(3, system.getStats().getAnzahlBesucher());
+		pController.einparkSystem(EinAuto3);		
+		pController.ausparkSystem(AusAuto3);
+
+		
 		//SummePreis
 		float sum = (Float.parseFloat(AusAuto1[4]) +  Float.parseFloat(AusAuto2[4]) + Float.parseFloat(AusAuto3[4]))/100;
-		assertEquals(sum, system.getStats().getSum());
+		assertEquals(sum, pController.getSystem().getStats().getSum());
 		//Gesamt Dauer in Minuten
 		float gesamtDauer = Float.parseFloat(AusAuto1[3]) +  Float.parseFloat(AusAuto2[3]) + Float.parseFloat(AusAuto3[3]);
 		gesamtDauer /= 1000f;
-		assertEquals(gesamtDauer, system.getStats().getGesamtDauer());
+		assertEquals(gesamtDauer, pController.getSystem().getStats().getGesamtDauer());
 		//avgPreis
-		assertEquals(sum/3, system.getStats().getAvgPrice());
+		assertEquals(sum/3, pController.getSystem().getStats().getAvgPrice());
 		//avgDauer
-		assertEquals(gesamtDauer/3, system.getStats().getAvgDauer());
+		assertEquals(gesamtDauer/3, pController.getSystem().getStats().getAvgDauer());
 		
 	}
 

@@ -13,7 +13,11 @@ public class Car {
 
 //	Konstruktor
     private Car(String key) {
-    	this.key = key;	
+    	this.key = key;
+    	this.nr = "";
+    	this.farbe = "";
+    	this.parkdauer = "";
+    	this.preis = "";
     }
 //	Methode zum Abrufen der Instanz, der Key ist enthalten in den Parametern
 //  computeIfAbsent erstellt eine neue Car-Instanz, falls für den angefragten Key keine Instanz existiert
@@ -70,6 +74,7 @@ public class Car {
 	public void setPreis(String preis) {
 		this.preis = preis;
 	}
+//	zum Abrufen der Fahrzeugart
 	public String getKey() {
 		return key;
 	}

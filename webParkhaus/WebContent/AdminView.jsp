@@ -12,7 +12,7 @@
 	price_factor='{"Pickup":1.25,"SUV":1.5,"Zweirad":0.5,"Trike":0.75,"Quad":0.75}'
 	vehicle_types='["PKW","SUV","Pickup","Zweirad","Trike","Quad"]'
 	server_url="http://localhost:8080/webParkhaus/Parkhaus"
-	extra_buttons='["sum","avg","ChangeParkSystem"]'
+	extra_buttons='["Gesamteinnahmen","Durschnitt","Andere Parkrichtung"]'
 	extra_charts='["Auslastung","Parkdauer","Fahrzeugtypen","Einnahmenverteilung"]'
 ></ccm-parkhaus-9-1-9>
 </body>

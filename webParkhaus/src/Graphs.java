@@ -12,28 +12,34 @@ import java.lang.Math;
 
 public class Graphs {
 	
+	@SuppressWarnings("unchecked")
 	public static String create(ArrayList<? extends Object> list, String chart) {
 		String output = "";
 		
 		chart = chart.toLowerCase();
 		if(chart.equals("auslastung")) {
+			
 			ArrayList<Integer> spots = (ArrayList<Integer>) list;
 			output = spots(spots.stream());
 			
 		}else if(chart.equals("parkdauer")) {
+			
 			ArrayList<String> parktime = (ArrayList<String>) list;
 			output = parkdauer(parktime.stream());
+			
 		}else if(chart.equals("fahrzeugtypen")) {
+			
 			ArrayList<String> types = (ArrayList<String>) list;
 			output = typen(types.stream());
 		}
+		
 		return output;
 	}
 	
 	
 	private static String parkdauer(Stream<String> stream) {
 		String output = "";
-		
+	
 //		Ablage des CarStreams
 		ArrayList<String> streamContainer = new ArrayList<String>(stream.collect(Collectors.toList()));
 //		Rundet Parkdauer zur nächsten Minute auf/ab
@@ -103,6 +109,8 @@ public class Graphs {
 	
 	private static String typen(Stream<String> stream) {
 		String output = "";
+		
+//		Ähnlich Parkdauer
 		
 		Map<String, Long> counter = stream
 				.collect(Collectors.groupingBy(x -> x, Collectors.counting()));
