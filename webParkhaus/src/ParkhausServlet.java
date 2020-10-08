@@ -58,7 +58,7 @@ public class ParkhausServlet extends HttpServlet {
 		}
 		
 		//ChangeParkSystem Button
-		if("cmd".equals(command)&&"Andere Parkrichtung".equals(param)) {
+		if("cmd".equals(command)&&"Andere_Parkrichtung".equals(param)) {
 			if(system.getParkBehaviour() instanceof ParkDefault) {
 				out.println("Parkverhalten: Backward");
 				system.setParkBehavior(new ParkBackward());
@@ -92,7 +92,7 @@ public class ParkhausServlet extends HttpServlet {
 		}
 		if("cmd".equals(command)&&"Bisheriger_Preis".equals(param)) {
 			system.notifyObservers();
-			out.println("Die aktuellen Kosten betragen" + df.format(system.getCustomer().getOutput()) + " Euro");
+			out.println("Die aktuellen Kosten betragen: " + df.format(system.getCustomer().getOutput()) + " Euro");
 		}
 		
 		getApplication().setAttribute("system", system);
