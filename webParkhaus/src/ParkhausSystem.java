@@ -25,11 +25,12 @@ public class ParkhausSystem implements IModel {
 		this.lastParked.add("0");
 	}
 //	Aktualisiert letztes Fahrzeug, welches in das Parkhaus eingefahren ist
+	@Override
 	public void updateLast(String type, String time) {
 		lastParked.set(0, type);
 		lastParked.set(1, time);
 		}
-	
+	@Override
 	public void changeMax(String[] params) {
 		String maxParkString = params[2];
 		if(!"_".equals(maxParkString)) {
