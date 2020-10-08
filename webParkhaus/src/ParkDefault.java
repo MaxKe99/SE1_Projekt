@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class ParkDefault implements IParkBehavior {
+public class ParkDefault implements IParkBehaviour {
 
 	//Automatische Einparkfunktion(Vorwärts)
 	

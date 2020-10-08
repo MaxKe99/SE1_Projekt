@@ -9,12 +9,12 @@ public class ParkhausSystem implements IModel {
 	private ArrayList<String> lastParked;
 	
 	private Integer maxPark;
-	private IParkBehavior parkBehav;
+	private IParkBehaviour parkBehav;
 	private Statistics stats;
 //	Speichert Observer/Views
 	private ArrayList<IObserver> observers = new ArrayList<IObserver>();
 
-	public ParkhausSystem(IParkBehavior parkBehav) {
+	public ParkhausSystem(IParkBehaviour parkBehav) {
 		this.spots = new ArrayList<Car>();
 		this.lastParked = new ArrayList<String>();
 		this.maxPark = 10;
@@ -74,11 +74,11 @@ public class ParkhausSystem implements IModel {
 		this.maxPark = maxPark;
 	}
 
-	public IParkBehavior getParkBehavior() {
+	public IParkBehaviour getParkBehaviour() {
 		return this.parkBehav;
 	}
 	
-	public void setParkBehavior(IParkBehavior parkBehav) {
+	public void setParkBehavior(IParkBehaviour parkBehav) {
 		this.parkBehav = parkBehav;
 		notifyObservers();
 	}

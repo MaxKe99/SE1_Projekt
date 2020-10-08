@@ -59,7 +59,7 @@ public class ParkhausServlet extends HttpServlet {
 		
 		//ChangeParkSystem Button
 		if("cmd".equals(command)&&"Andere Parkrichtung".equals(param)) {
-			if(system.getParkBehavior() instanceof ParkDefault) {
+			if(system.getParkBehaviour() instanceof ParkDefault) {
 				out.println("Parkverhalten: Backward");
 				system.setParkBehavior(new ParkBackward());
 			}else {

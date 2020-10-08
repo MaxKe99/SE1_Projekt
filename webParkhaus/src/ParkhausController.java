@@ -12,7 +12,7 @@ public class ParkhausController implements IController{
 	}
 	
 	public int einparkSystem(String[] params) {
-		return this.system.getParkBehavior().einparkSystem(this.system, params);
+		return this.system.getParkBehaviour().einparkSystem(this.system, params);
 	}
 	
 	public void ausparkSystem(String[] params) {

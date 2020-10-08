@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class ParkBackward implements IParkBehavior {
+public class ParkBackward implements IParkBehaviour {
 
 	//Automatische Einparkfunktion(Rückwärts)
 	
